@@ -84,7 +84,8 @@ class SSD1306Base(object):
 			self._gpio = GPIO.get_platform_gpio()
 		# Setup reset pin.
 		self._rst = rst
-		self._gpio.setup(self._rst, GPIO.OUT)
+		if not self._rst is None:
+			self._gpio.setup(self._rst, GPIO.OUT)
 		# Handle hardware SPI
 		if spi is not None:
 			self._log.debug('Using hardware SPI')
@@ -149,14 +150,15 @@ class SSD1306Base(object):
 
 	def reset(self):
 		"""Reset the display."""
-		# Set reset high for a millisecond.
-		self._gpio.set_high(self._rst)
-		time.sleep(0.001)
-		# Set reset low for 10 milliseconds.
-		self._gpio.set_low(self._rst)
-		time.sleep(0.010)
-		# Set reset high again.
-		self._gpio.set_high(self._rst)
+		if not self._rst is None:
+			# Set reset high for a millisecond.
+			self._gpio.set_high(self._rst)
+			time.sleep(0.001)
+			# Set reset low for 10 milliseconds.
+			self._gpio.set_low(self._rst)
+			time.sleep(0.010)
+			# Set reset high again.
+			self._gpio.set_high(self._rst)
 
 	def display(self):
 		"""Write display buffer to physical display."""
